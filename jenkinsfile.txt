@@ -52,7 +52,6 @@ pipeline {
                         } 
                 }
               }
-        }
 
             stage('SODA Scan Checks Product 2') {
                 steps {
