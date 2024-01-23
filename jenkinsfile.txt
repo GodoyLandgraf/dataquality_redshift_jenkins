@@ -37,36 +37,26 @@ pipeline {
             stage('SODA Scan Checks Product 1') {
                 steps {
                     script {
-                        def sodaScanOutput
                         echo "Test Connection:"
                         sh 'soda test-connection -d redshift_datasource -c configuration.yml'
-                        echo "Running soda scan:"    
+                        def sodaScanOutput = null
+                        echo "Running soda scan:"
                         try {
                             sodaScanOutput = sh(script: 'soda scan -d redshift_datasource -c configuration.yml checks_table2.yml', returnStdout: true).trim()
                             // Debugging messages
                             echo "Soda Scan Output:"
                             echo sodaScanOutput
                             echo "Soda scan completed"
+                            writeFile file: "${WORKSPACE}/checks_redshift_table2_${BUILD_ID}", text: sodaScanOutput
                             echo "Soda Scan Success"
                         } catch (Exception e) {
-                                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                    // Trata exceção e define a mensagem de erro na variável sodaScanOutput
-                                    sodaScanOutput = "Soda scan failed. ${e.message}"
-                                    echo "Soda Scan Output (CATCH BLOCK):"
-                                    echo sodaScanOutput
-                                    error("Soda scan failed") // Isso marcará a stage como falha
-                                }
-                        }finally {
-                            // Write output to file regardless of success or failure
-                            if (sodaScanOutput != null) {
-                                writeFile file: "${WORKSPACE}/checks_redshift_table2_${BUILD_ID}", text: sodaScanOutput
-                            } else {
-                                echo "sodaScanOutput is null. Unable to write to file."
-                            }
+                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
+                            error("Soda scan failed") // This will mark the stage as failed
                         }
                     }
                 }
-            }
+              }
+        }
 
             stage('SODA Scan Checks Product 2') {
                 steps {
