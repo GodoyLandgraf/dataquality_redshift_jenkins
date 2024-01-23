@@ -47,13 +47,18 @@ pipeline {
                             echo "Soda Scan Output:"
                             echo sodaScanOutput
                             echo "Soda scan completed"
-                            writeFile file: "${WORKSPACE}/checks_redshift_table2_${BUILD_ID}", text: sodaScanOutput
                             echo "Soda Scan Success"
                         } catch (Exception e) {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
-                            writeFile file: "${WORKSPACE}/checks_redshift_table2_${BUILD_ID}", text: sodaScanOutput
                             error("Soda scan failed") // This will mark the stage as failed
                         }
+                        }finally {
+                            // Write output to file regardless of success or failure
+                            if (sodaScanOutput != null) {
+                                writeFile file: "${WORKSPACE}/checks_redshift_table2_${BUILD_ID}", text: sodaScanOutput
+                            } else {
+                                echo "sodaScanOutput is null. Unable to write to file."
+                            }
                         }
                     }
                 }
