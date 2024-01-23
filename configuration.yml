@@ -1,0 +1,11 @@
+data_source redshift_datasource:
+  type: redshift
+  host: ${HOST}
+  username: ${USERNAME}
+  password: ${PASSWORD}
+  database: dev
+  schema: data_schema
+  access_key_id: ${AWS_ACCESS_KEY_ID}
+  secret_access_key: ${AWS_SECRET_ACCESS_KEY}
+  role_arn: ${ROLE_ARN}
+  region: us-east-1
