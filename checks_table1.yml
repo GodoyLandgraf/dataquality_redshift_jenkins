@@ -1,7 +1,7 @@
-checks for table2_dataquality:
+checks for table1_dataquality:
   - row_count > 0
   - row_count between 1 and 5
   - schema:
       name: TESTE Schema
       warn:
-        when required column missing: [colmissing]
+        when required column missing: [id,name,age,salary]
