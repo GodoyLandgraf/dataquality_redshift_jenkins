@@ -47,18 +47,12 @@ pipeline {
                             echo "Soda Scan Output:"
                             echo sodaScanOutput
                             echo "Soda scan completed"
+                            writeFile file: "${WORKSPACE}/checks_redshift_table2_${BUILD_ID}", text: sodaScanOutput
                             echo "Soda Scan Success"
                         } catch (Exception e) {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
                             error("Soda scan failed") // This will mark the stage as failed
                         }
-                        } finally {
-                            // Save the output even if there was a failure
-                            if (sodaScanOutput != null) {
-                                def outputFile = "${WORKSPACE}/checks_redshift_table2_${BUILD_ID}"
-                                writeFile file: outputFile, text: sodaScanOutput
-                                sh "aws s3 cp ${outputFile} s3://athena-soda-storage/jenkins-storage/"
-                            }
                         }
                     }
                 }
@@ -81,4 +75,14 @@ pipeline {
             }
         }
     }
+ post {
+    always {
+        // Upload the result to S3 as a post-build action
+        script {
+            // Upload the result to S3
+            sh "aws s3 cp ${WORKSPACE}/checks_redshift_table1_${BUILD_ID} s3://athena-soda-storage/jenkins-storage/"
+            sh "aws s3 cp ${WORKSPACE}/checks_redshift_table2_${BUILD_ID} s3://athena-soda-storage/jenkins-storage/"
+        }
+    }
+}
 }
