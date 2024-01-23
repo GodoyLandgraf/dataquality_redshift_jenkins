@@ -34,19 +34,21 @@ pipeline {
                 }
             }
         }
-
+        stage('Check Connective SODA') {
+            steps {
+                script {
+                    echo "Test Connection:"
+                    sh 'soda test-connection -d redshift_datasource -c configuration.yml'
+                    }
+                }
+            }
+        }
         stage('SODA Scan Checks Product 1') {
             steps {
                 script {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                        echo "Test Connection:"
-                        sh 'soda test-connection -d redshift_datasource -c configuration.yml'
                         echo "Running soda scan:"
-                        def sodaScanOutput = sh(script: 'soda scan -d redshift_datasource -c configuration.yml checks_table2.yml',returnStdout: true).trim()
-                        // Print the captured output
-                        echo "Soda Scan Output: ${sodaScanOutput}"
-                        // Save the output to a file
-                        writeFile file: "${WORKSPACE}/checks_redshift_table2_${BUILD_ID}", text: sodaScanOutput
+                        sh "soda scan -d soda -c configuration.yml checks_table2.yml | tee ${WORKSPACE}/checks_redshift_table2_${BUILD_ID} 2>&1"
                         echo "Soda scan completed"
                     }
                 }
@@ -84,7 +86,7 @@ pipeline {
                     try {
                         // Upload the result to S3
                         sh "aws s3 cp ${WORKSPACE}/checks_redshift_table1_${BUILD_ID} s3://athena-soda-storage/jenkins-storage/"
-                        sh "aws s3 cp ${WORKSPACE}/checks_redshift_table2_${BUILD_ID} s3://athena-soda-storage/jenkins-storage/"
+                        sh "aws s3 cp ${WORKSPACE}/checks_redshift_table2_${BUILD_ID}{BUILD_ID} s3://athena-soda-storage/jenkins-storage/"
                     } catch (Exception e) {
                         // Handle the exception, you can customize this block based on your needs
                         echo "Error uploading to S3: ${e.message}"
