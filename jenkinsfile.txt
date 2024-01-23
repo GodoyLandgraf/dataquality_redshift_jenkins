@@ -85,7 +85,7 @@ pipeline {
                   } catch (Exception e) {
                         //Handle the exception, you can customize this block based on your needs
                           echo "Error uploading to S3: ${e.message}"
-                          currentBuild.result = 'FAILURE' // Mark the build as failed
+                        error("Failed to upload to S3. Marking the build as FAILURE.")
               }
                 }
             }
