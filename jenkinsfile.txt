@@ -38,6 +38,7 @@ pipeline {
                 script {
                     // Ensure we are in the correct directory
                     dir(folderPath) {
+                        sh 'pwd'
                         echo "Test Connection:"
                         sh 'soda test-connection -d redshift_datasource -c configuration.yml'
                         echo "Running soda scan:"
