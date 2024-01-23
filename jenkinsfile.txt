@@ -45,20 +45,21 @@ pipeline {
         stage('SODA Scan Checks Product 1') {
             steps {
                 script {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         echo "Running soda scan:"
                         sh "soda scan -d redshift_datasource -c configuration.yml checks_table2.yml | tee ${WORKSPACE}/checks_redshift_table2_${JOB_NAME}_${BUILD_ID}"
                         echo "Soda scan completed" 
+                    }
                 }
             }
         }
         stage('SODA Scan Checks Product 2') {
             steps {
                 script {
-                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         echo "Running soda scan:"
                         sh "soda scan -d redshift_datasource -c configuration.yml checks_table1.yml | tee ${WORKSPACE}/checks_redshift_table1_${JOB_NAME}_${BUILD_ID}"
                         echo "Soda scan completed"
-                    }
+                    
                 }
             }
         }
