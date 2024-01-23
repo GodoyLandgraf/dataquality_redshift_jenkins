@@ -34,7 +34,7 @@ pipeline {
             }
         }
 
-            stage('SODA Scan Checks PRODUCT 2') {
+            stage('SODA Scan Checks Product 1') {
                 steps {
                     script {
                         echo "Test Connection:"
@@ -63,7 +63,7 @@ pipeline {
                     }
                 }
             }
-        stage('SODA Scan Checks PRODUCT 1') {
+        stage('SODA Scan Checks Product 2') {
             steps {
                 script {
                     // Ensure we are in the correct directory
