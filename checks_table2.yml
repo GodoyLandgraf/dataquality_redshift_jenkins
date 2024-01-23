@@ -1,5 +1,4 @@
 checks for table2_dataquality:
-  - row_count > 0
   - row_count between 1 and 5
   - schema:
       name: TESTE Schema
