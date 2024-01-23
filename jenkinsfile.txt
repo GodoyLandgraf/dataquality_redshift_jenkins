@@ -42,7 +42,6 @@ pipeline {
                     }
                 }
             }
-        }
         stage('SODA Scan Checks Product 1') {
             steps {
                 script {
