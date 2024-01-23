@@ -42,7 +42,7 @@ pipeline {
                         def sodaScanOutput = null
                         echo "Running soda scan:"
                         try {
-                            sodaScanOutput = sh(script: 'soda scan -d redshift_datasource -c configuration.yml checks_table2.yml', returnStdout: true).trim()
+                            sodaScanOutput = sh(script: 'soda scan -d redshift_datasource -c configuration.yml checks_table1.yml', returnStdout: true).trim()
                             // Debugging messages
                             echo "Soda Scan Output:"
                             echo sodaScanOutput
@@ -67,7 +67,7 @@ pipeline {
                         def sodaScanOutput = null
                         echo "Running soda scan:"
                         try {
-                            sodaScanOutput = sh(script: 'soda scan -d redshift_datasource -c configuration.yml checks_table2.yml', returnStdout: true).trim()
+                            sodaScanOutput = sh(script: 'soda scan -d redshift_datasource -c configuration.yml checks_table1.yml', returnStdout: true).trim()
                             // Debugging messages
                             echo "Soda Scan Output:"
                             echo sodaScanOutput
