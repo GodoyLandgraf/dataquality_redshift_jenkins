@@ -43,13 +43,12 @@ pipeline {
                         sh 'soda test-connection -d redshift_datasource -c configuration.yml'
                         def sodaScanOutput = null
                         echo "Running soda scan:"
-                        sodaScanOutput = sh(script: 'soda scan -d redshift_datasource -c configuration.yml checks_table2.yml', returnStdout: true).trim()
-                         // Debugging messages
-                         echo "Soda Scan Output:"
-                         echo sodaScanOutput
-                         echo "Soda scan completed"
-                         writeFile file: "${WORKSPACE}/checks_redshift_table2_${BUILD_ID}", text: sodaScanOutput
-                         echo "Soda Scan Success"
+                        def sodaScanOutput = sh(script: 'soda scan -d redshift_datasource -c configuration.yml checks_table2.yml',returnStdout: true).trim()
+                        // Print the captured output
+                        echo "Soda Scan Output: ${sodaScanOutput}"
+                        // Save the output to a file
+                        writeFile file: "${WORKSPACE}/checks_redshift_table2_${BUILD_ID}", text: sodaScanOutput
+                        echo "Soda scan completed"
                     }
                 }
             }
