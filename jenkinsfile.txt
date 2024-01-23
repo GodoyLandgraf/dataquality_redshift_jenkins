@@ -38,7 +38,7 @@ pipeline {
             steps {
                 script {
                     echo "Test Connection:"
-                    sh 'soda test-connection -d redshift_datasource -c configuration.yml'
+                    sh 'soda test-connection -d redshift_datasourceE -c configuration.yml'
                     }
                 }
             }
