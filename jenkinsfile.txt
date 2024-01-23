@@ -46,7 +46,7 @@ pipeline {
             steps {
                 script {
                         echo "Running soda scan:"
-                        sh "soda scan -d redshift_datasource -c configuration .yml checks_table2.yml | tee ${WORKSPACE}/checks_redshift_table2_${JOB_NAME}_${BUILD_ID}"
+                        sh "soda scan -d redshift_datasource -c configuration.yml checks_table2.yml | tee ${WORKSPACE}/checks_redshift_table2_${JOB_NAME}_${BUILD_ID}"
                         echo "Soda scan completed" 
                 }
             }
