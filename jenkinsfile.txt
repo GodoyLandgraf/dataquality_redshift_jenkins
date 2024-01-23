@@ -41,19 +41,15 @@ pipeline {
                         sh 'soda test-connection -d redshift_datasource -c configuration.yml'
                         def sodaScanOutput = null
                         echo "Running soda scan:"
-                        try {
-                            sodaScanOutput = sh(script: 'soda scan -d redshift_datasource -c configuration.yml checks_table2.yml', returnStdout: true).trim()
-                            // Debugging messages
-                            echo "Soda Scan Output:"
-                            echo sodaScanOutput
-                            echo "Soda scan completed"
-                            writeFile file: "${WORKSPACE}/checks_redshift_table2_${BUILD_ID}", text: sodaScanOutput
-                            echo "Soda Scan Success"
-                        } catch (Exception e) {
-                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
-                            error("Soda scan failed") // This will mark the stage as failed
-                        }
-                    }
+                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE')
+                        sodaScanOutput = sh(script: 'soda scan -d redshift_datasource -c configuration.yml checks_table2.yml', returnStdout: true).trim()
+                        writeFile file: "${WORKSPACE}/checks_redshift_table2_${BUILD_ID}", text: sodaScanOutput
+                        Debugging messages
+                        echo "Soda Scan Output:"
+                        echo sodaScanOutput
+                        echo "Soda scan completed"
+                        echo "Soda Scan Success"
+                        } 
                 }
               }
         }
