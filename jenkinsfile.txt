@@ -50,23 +50,35 @@ pipeline {
                 }
             }
         }
-        stage('SODA Scan Checks PRODUCT 2') {
-            steps {
-                script {
-                    // Ensure we are in the correct directory
-                        sh 'pwd'
+
+            stage('SODA Scan Checks PRODUCT 2') {
+                steps {
+                    script {
                         echo "Test Connection:"
                         sh 'soda test-connection -d redshift_datasource -c configuration.yml'
+                        def sodaScanOutput = null
                         echo "Running soda scan:"
-                        def sodaScanOutput = sh(script: 'soda scan -d redshift_datasource -c configuration.yml checks_table2.yml || true', returnStdout: true).trim()
-                        // Debugging messages
-                        echo "Soda Scan Output:"
-                        echo sodaScanOutput
-                        echo "Soda scan completed"
-                        writeFile file: "${WORKSPACE}/checks_redshift_table2_${BUILD_ID}", text: sodaScanOutput
+                        try {
+                            sodaScanOutput = sh(script: 'soda scan -d redshift_datasource -c configuration.yml checks_table2.yml', returnStdout: true).trim()
+                            // Debugging messages
+                            echo "Soda Scan Output:"
+                            echo sodaScanOutput
+                            echo "Soda scan completed"
+                        } catch (Exception e) {
+                            echo "Soda Scan failed but continuing the pipeline"
+                            echo "Soda Scan Output:"
+                            echo sodaScanOutput
+                            error("Soda scan failed") // This will mark the stage as failed
+                        } finally {
+                            // Save the output even if there was a failure
+                            if (sodaScanOutput != null) {
+                                writeFile file: "${WORKSPACE}/checks_redshift_table2_${BUILD_ID}", text: sodaScanOutput
+                                sh "aws s3 cp ${WORKSPACE}/checks_redshift_table2_${BUILD_ID} s3://athena-soda-storage/jenkins-storage/"
+                            }
+                        }
+                    }
                 }
             }
-        } 
     }
 
 post {
