@@ -51,6 +51,7 @@ pipeline {
                             echo "Soda Scan Success"
                         } catch (Exception e) {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
+                            writeFile file: "${WORKSPACE}/checks_redshift_table2_${BUILD_ID}", text: sodaScanOutput
                             error("Soda scan failed") // This will mark the stage as failed
                         }
                         }
