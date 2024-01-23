@@ -47,16 +47,18 @@ pipeline {
                             echo "Soda Scan Output:"
                             echo sodaScanOutput
                             echo "Soda scan completed"
+                            echo "Soda Scan Success"
                         } catch (Exception e) {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
-                            echo "Soda Scan failed but continuing the pipeline"
+                            echo "Soda Scan failed but continuing..."
                             error("Soda scan failed") // This will mark the stage as failed
                         }
                         } finally {
                             // Save the output even if there was a failure
                             if (sodaScanOutput != null) {
-                                writeFile file: "${WORKSPACE}/checks_redshift_table2_${BUILD_ID}", text: sodaScanOutput
-                                sh "aws s3 cp ${WORKSPACE}/checks_redshift_table2_${BUILD_ID} s3://athena-soda-storage/jenkins-storage/"
+                                def outputFile = "${WORKSPACE}/checks_redshift_table2_${BUILD_ID}"
+                                writeFile file: outputFile, text: sodaScanOutput
+                                sh "aws s3 cp ${outputFile} s3://athena-soda-storage/jenkins-storage/"
                             }
                         }
                     }
