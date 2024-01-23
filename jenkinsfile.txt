@@ -47,7 +47,7 @@ pipeline {
                 script {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         echo "Running soda scan:"
-                        sh "soda scan -d soda -c configuration.yml checks_table2.yml | tee ${WORKSPACE}/checks_redshift_table2_${BUILD_ID} 2>&1"
+                        sh "soda scan -d redshift_datasource -c configuration.yml checks_table2.yml | tee ${WORKSPACE}/checks_redshift_table2_${BUILD_ID}"
                         echo "Soda scan completed"
                     }
                 }
