@@ -37,7 +37,6 @@ pipeline {
             steps {
                 script {
                     // Ensure we are in the correct directory
-                    dir(folderPath) {
                         sh 'pwd'
                         echo "Test Connection:"
                         sh 'soda test-connection -d redshift_datasource -c configuration.yml'
@@ -45,7 +44,6 @@ pipeline {
                         def sodaScanOutput = sh(script: 'soda scan -d redshift_datasource -c configuration.yml checks_table1.yml || true', returnStdout: true).trim()
                         echo "Soda scan completed"
                         writeFile file: "${WORKSPACE}/checks_redsihft_table1_${BUILD_ID}", text: sodaScanOutput
-                    }
                 }
             }
         } 
