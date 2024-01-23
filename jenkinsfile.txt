@@ -48,8 +48,10 @@ pipeline {
                             echo sodaScanOutput
                             echo "Soda scan completed"
                         } catch (Exception e) {
+                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
                             echo "Soda Scan failed but continuing the pipeline"
                             error("Soda scan failed") // This will mark the stage as failed
+                        }
                         } finally {
                             // Save the output even if there was a failure
                             if (sodaScanOutput != null) {
