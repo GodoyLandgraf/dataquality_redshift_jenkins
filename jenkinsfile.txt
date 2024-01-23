@@ -51,7 +51,7 @@ pipeline {
                             echo "Soda Scan Success"
                         } catch (Exception e) {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
-                            writeFile file: "${WORKSPACE}/checks_redshift_table2_${BUILD_ID}", text: sodaScanOutput
+                           //writeFile file: "${WORKSPACE}/checks_redshift_table2_${BUILD_ID}", text: sodaScanOutput
                             error("Soda scan failed") // This will mark the stage as failed
                         }
                         }
@@ -85,7 +85,7 @@ pipeline {
                   } catch (Exception e) {
                         //Handle the exception, you can customize this block based on your needs
                           echo "Error uploading to S3: ${e.message}"
-                        error("Failed to upload to S3. Marking the build as FAILURE.")
+                          error("Failed to upload to S3. Marking the build as FAILURE.")
               }
                 }
             }
